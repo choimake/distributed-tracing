@@ -1,0 +1,15 @@
+version: '3'
+services:
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.93.0
+    command: ["--config=/etc/otelcol/config.yaml"]
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/etc/otelcol/credencials.json
+      - OTEL_INSTRUMENTATION_MESSAGING_EXPERIMENTAL_RECEIVE_TELEMETRY_ENABLED=true
+    volumes:
+      - ./config.yaml:/etc/otelcol/config.yaml
+      - ./credentials/application_default_credentials.json:/etc/otelcol/credencials.json
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+      - "55681:55681"

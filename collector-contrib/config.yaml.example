@@ -1,0 +1,25 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+      http:
+
+exporters:
+  googlecloud:
+    project: <project_id>
+    log:
+      default_log_name: opentelemetry.io/collector-exported-log
+
+service:
+  # NOTE: json形式でログを出力したい場合は、以下の設定を記載する
+  telemetry:
+    logs:
+      encoding: json
+      level: debug
+  pipelines:
+    traces:
+      receivers: [otlp]
+      exporters: [googlecloud]
+    logs:
+      receivers: [otlp]
+      exporters: [googlecloud]
