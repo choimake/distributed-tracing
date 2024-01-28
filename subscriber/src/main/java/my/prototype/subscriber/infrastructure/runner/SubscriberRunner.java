@@ -8,6 +8,7 @@ import com.google.pubsub.v1.PubsubMessage;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.context.Context;
+import io.opentelemetry.context.Scope;
 import io.opentelemetry.context.propagation.TextMapGetter;
 import java.util.Collections;
 import java.util.Map;
@@ -65,12 +66,16 @@ public class SubscriberRunner {
 
         // spanを作成して、現在のspanに設定する
         Span span = GlobalOpenTelemetry.getTracerProvider().tracerBuilder("tracerSubscribe").build().spanBuilder("subscribe").startSpan();
-        // makeCurrentしてから、logを出力しないと、新しいspanで保存されない
-        span.makeCurrent();
 
-        useCase.execute();
-
-        span.end();
+        // Reference:
+        // https://opentelemetry.io/docs/languages/java/instrumentation/#create-spans
+        try(Scope scope = span.makeCurrent()){
+          useCase.execute();
+        } catch (Exception e) {
+          throw e;
+        } finally {
+          span.end();
+        }
 
         // この無限ループの実装だと1秒に1件ずつメッセージを取得する動きになる
         Thread.sleep(1000);
