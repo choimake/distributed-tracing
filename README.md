@@ -2,7 +2,9 @@
 OpenTelemetryとCloud Traceを使ったPub/Sub経由のトレース計装のサンプル
 
 ## How to Use
-事前にGoogle Cloudのプロジェクトを作成し、Pub/Subのtopicとsubscriptionを作成すること
+- 事前にやること
+  - Google Cloudのプロジェクトを作成し、Pub/Subのtopicとsubscriptionを作成すること
+  - direnvを入れること
 
 
 .env.exampleを元に.envをコピーして作成する
